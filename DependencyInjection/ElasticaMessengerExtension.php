@@ -30,6 +30,7 @@ class ElasticaMessengerExtension extends Extension
         $container->register('elastica_messenger.messenger_processor', MessengerProcessor::class)
             ->addArgument(new Reference('fos_elastica.pager_provider_registry'))
             ->addArgument(new Reference('fos_elastica.pager_persister_registry'))
+            ->addTag('messenger.message_handler')
         ;
 
         $container->register('elastica_messenger.queue_pager_perister', MessengerPagerPersister::class)
@@ -48,6 +49,7 @@ class ElasticaMessengerExtension extends Extension
                 ->addArgument(new Reference($this->getManagerRegistry($doctrineDriver)))
                 ->addArgument(new Reference('fos_elastica.persister_registry'))
                 ->addArgument(new Reference('fos_elastica.indexable'))
+                ->addTag('messenger.message_handler')
             ;
 
             foreach ($config['doctrine']['queue_listeners'] as $listenerConfig) {
