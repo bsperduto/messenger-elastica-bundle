@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->booleanNode('enabled')->defaultValue(true)->end()
-                ->scalarNode('message_bus')->defaultValue('@messenger.default_bus')->cannotBeEmpty()->end()
+                ->scalarNode('message_bus')->defaultValue('@messenger.bus.default')->cannotBeEmpty()->end()
                 ->arrayNode('doctrine')
                     ->children()
                         ->scalarNode('driver')->defaultValue('orm')->cannotBeEmpty()
