@@ -30,6 +30,7 @@ class ElasticaMessengerExtension extends Extension
         $container->register('elastica_messenger.messenger_processor', MessengerProcessor::class)
             ->addArgument(new Reference('fos_elastica.pager_provider_registry'))
             ->addArgument(new Reference('fos_elastica.pager_persister_registry'))
+            ->addArgument(new Reference('event_dispatcher'))
             ->addTag('messenger.message_handler')
         ;
 
