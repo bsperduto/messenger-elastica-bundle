@@ -1,9 +1,9 @@
 <?php
 
-namespace Enqueue\ElasticaBundle;
+namespace BSperduto\ElasticaMessengerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class EnqueueElasticaBundle extends Bundle
+class ElasticaMessengerBundle extends Bundle
 {
 }

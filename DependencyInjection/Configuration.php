@@ -1,6 +1,6 @@
 <?php
 
-namespace Enqueue\ElasticaBundle\DependencyInjection;
+namespace BSperduto\ElasticaMessengerBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -13,17 +13,17 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         
-        $tb = new TreeBuilder('enqueue_elastica');
+        $tb = new TreeBuilder('elastica_messenger');
         if (method_exists($tb, 'getRootNode')) {
             $rootNode = $tb->getRootNode();
         } else {
             // BC layer for symfony/config 4.1 and older
-            $rootNode = $tb->root('enqueue_elastica');
+            $rootNode = $tb->root('elastica_messenger');
         }
         $rootNode
             ->children()
                 ->booleanNode('enabled')->defaultValue(true)->end()
-                ->scalarNode('transport')->defaultValue('%enqueue.default_transport%')->cannotBeEmpty()->isRequired()->end()
+                ->scalarNode('message_bus')->defaultValue('%messenger.default_bus%')->cannotBeEmpty()->isRequired()->end()
                 ->arrayNode('doctrine')
                     ->children()
                         ->scalarNode('driver')->defaultValue('orm')->cannotBeEmpty()

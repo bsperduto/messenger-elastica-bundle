@@ -1,18 +1,13 @@
 <?php
-namespace Enqueue\ElasticaBundle\Doctrine\Queue;
+namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
-use Enqueue\Client\CommandSubscriberInterface;
-use Enqueue\Consumption\QueueSubscriberInterface;
-use Enqueue\Consumption\Result;
-use Enqueue\Util\JSON;
 use FOS\ElasticaBundle\Persister\PersisterRegistry;
 use FOS\ElasticaBundle\Provider\IndexableInterface;
-use Interop\Queue\Context;
-use Interop\Queue\Message;
-use Interop\Queue\Processor;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
 
-final class SyncIndexWithObjectChangeProcessor implements Processor, CommandSubscriberInterface, QueueSubscriberInterface
+final class SyncIndexWithObjectChangeProcessor implements MessageHandlerInterface
 {
     const INSERT_ACTION = 'insert';
 
@@ -33,27 +28,27 @@ final class SyncIndexWithObjectChangeProcessor implements Processor, CommandSubs
         $this->doctrine = $doctrine;
     }
 
-    public function process(Message $message, Context $context): Result
+    public function __invoke(DoctrineChangeNotification $message)
     {
-        $data = JSON::decode($message->getBody());
+        $data = $message->getContent();
 
         if (false == isset($data['action'])) {
-            return Result::reject('The message data misses action');
+            throw new \LogicException('The message data misses action');
         }
         if (false == isset($data['model_class'])) {
-            return Result::reject('The message data misses model_class');
+            throw new \LogicException('The message data misses model_class');
         }
         if (false == isset($data['id'])) {
-            return Result::reject('The message data misses id');
+            throw new \LogicException('The message data misses id');
         }
         if (false == isset($data['index_name'])) {
-            return Result::reject('The message data misses index_name');
+            throw new \LogicException('The message data misses index_name');
         }
         if (false == isset($data['type_name'])) {
-            return Result::reject('The message data misses type_name');
+            throw new \LogicException('The message data misses type_name');
         }
         if (false == isset($data['repository_method'])) {
-            return Result::reject('The message data misses repository_method');
+            throw new \LogicException('The message data misses repository_method');
         }
 
         $action = $data['action'];
@@ -71,7 +66,7 @@ final class SyncIndexWithObjectChangeProcessor implements Processor, CommandSubs
                 if (false == $object = $repository->{$repositoryMethod}($id)) {
                     $persister->deleteById($id);
 
-                    return Result::ack(sprintf('The object "%s" with id "%s" could not be found.', $modelClass, $id));
+                    return true;
                 }
 
                 if ($persister->handlesObject($object)) {
@@ -82,40 +77,25 @@ final class SyncIndexWithObjectChangeProcessor implements Processor, CommandSubs
                     }
                 }
 
-                return Result::ack();
+                return true;
             case self::INSERT_ACTION:
                 if (false == $object = $repository->{$repositoryMethod}($id)) {
                     $persister->deleteById($id);
 
-                    return Result::ack(sprintf('The object "%s" with id "%s" could not be found.', $modelClass, $id));
+                    return true;
                 }
 
                 if ($persister->handlesObject($object) && $this->indexable->isObjectIndexable($index, $type, $object)) {
                     $persister->insertOne($object);
                 }
 
-                return Result::ack();
+                return true;
             case self::REMOVE_ACTION:
                 $persister->deleteById($id);
 
-                return Result::ack();
+                return true;
             default:
-                return Result::reject(sprintf('The action "%s" is not supported', $action));
+                throw new \LogicException(sprintf('The action "%s" is not supported', $action));
         }
-    }
-
-    public static function getSubscribedCommand(): array
-    {
-        return [
-            'command' => Commands::SYNC_INDEX_WITH_OBJECT_CHANGE,
-            'queue' => Commands::SYNC_INDEX_WITH_OBJECT_CHANGE,
-            'prefix_queue' => false,
-            'exclusive' => true,
-        ];
-    }
-
-    public static function getSubscribedQueues(): array
-    {
-        return [Commands::SYNC_INDEX_WITH_OBJECT_CHANGE];
     }
 }

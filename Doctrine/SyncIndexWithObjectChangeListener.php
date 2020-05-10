@@ -1,17 +1,19 @@
 <?php
-namespace Enqueue\ElasticaBundle\Doctrine;
+namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use Enqueue\ElasticaBundle\Doctrine\Queue\Commands;
-use Enqueue\ElasticaBundle\Doctrine\Queue\SyncIndexWithObjectChangeProcessor as SyncProcessor;
-use Enqueue\Util\JSON;
-use Interop\Queue\Context;
+use BSperduto\ElasticaMessengerBundle\Doctrine\Queue\SyncIndexWithObjectChangeProcessor as SyncProcessor;
 use Doctrine\Common\EventSubscriber;
+use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class SyncIndexWithObjectChangeListener implements EventSubscriber
 {
-    private $context;
+    /**
+     * @var MessageBusInterface
+     */
+    private $bus;
 
     /**
      * @var string
@@ -28,9 +30,9 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
      */
     private $config;
 
-    public function __construct(Context $context, $modelClass, array $config)
+    public function __construct(MessageBusInterface $bus, $modelClass, array $config)
     {
-        $this->context = $context;
+        $this->bus = $bus;
         $this->modelClass = $modelClass;
         $this->config = $config;
     }
@@ -92,9 +94,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
      */
     private function sendUpdateIndexMessage($action, $id)
     {
-        $queue = $this->context->createQueue(Commands::SYNC_INDEX_WITH_OBJECT_CHANGE);
-
-        $message = $this->context->createMessage(JSON::encode([
+        $message = new DoctrineChangeNotification([
             'action' => $action,
             'model_class' => $this->modelClass,
             'model_id' => $this->config['model_id'],
@@ -102,9 +102,9 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
             'index_name' => $this->config['index_name'],
             'type_name' => $this->config['type_name'],
             'repository_method' => $this->config['repository_method'],
-        ]));
+        ]);
 
-        $this->context->createProducer()->send($queue, $message);
+        $this->bus->dispatch($message);
     }
 
     /**
