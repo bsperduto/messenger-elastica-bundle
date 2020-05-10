@@ -21,7 +21,7 @@ final class MessengerProcessor implements MessageHandlerInterface
         $this->pagerProviderRegistry = $pagerProviderRegistry;
     }
 
-    public function process(MessengerPersisterNotification $message)
+    public function __invoke(MessengerPersisterNotification $message)
     {
 
         $data = $message->getContent();
