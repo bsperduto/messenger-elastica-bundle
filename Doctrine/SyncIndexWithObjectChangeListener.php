@@ -3,7 +3,7 @@ namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use BSperduto\ElasticaMessengerBundle\Doctrine\Queue\SyncIndexWithObjectChangeProcessor as SyncProcessor;
+use BSperduto\ElasticaMessengerBundle\Doctrine\SyncIndexWithObjectChangeProcessor as SyncProcessor;
 use Doctrine\Common\EventSubscriber;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
 use Symfony\Component\Messenger\MessageBusInterface;
