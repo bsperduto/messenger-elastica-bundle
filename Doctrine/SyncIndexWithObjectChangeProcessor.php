@@ -3,7 +3,7 @@ namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
 use FOS\ElasticaBundle\Persister\PersisterRegistry;
 use FOS\ElasticaBundle\Provider\IndexableInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
 
@@ -21,7 +21,7 @@ final class SyncIndexWithObjectChangeProcessor implements MessageHandlerInterfac
 
     private $doctrine;
 
-    public function __construct(ManagerRegistry $doctrine, PersisterRegistry $persisterRegistry, IndexableInterface $indexable)
+    public function __construct(Registry $doctrine, PersisterRegistry $persisterRegistry, IndexableInterface $indexable)
     {
         $this->persisterRegistry = $persisterRegistry;
         $this->indexable = $indexable;
