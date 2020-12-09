@@ -57,7 +57,7 @@ final class MessengerPagerPersister implements PagerPersisterInterface
         $objectPersister = $this->registry->getPersister($options['indexName'], $options['typeName']);
 
         $event = new PrePersistEvent($pager, $objectPersister, $options);
-        $this->dispatcher->dispatch(Events::PRE_PERSIST, $event);
+        $this->dispatcher->dispatch($event);
         $pager = $event->getPager();
         $options = $event->getOptions();
 
@@ -85,6 +85,6 @@ final class MessengerPagerPersister implements PagerPersisterInterface
         } while ($page <= $lastPage);
 
         $event = new PostPersistEvent($pager, $objectPersister, $options);
-        $this->dispatcher->dispatch(Events::POST_PERSIST, $event);
+        $this->dispatcher->dispatch($event);
     }
 }
