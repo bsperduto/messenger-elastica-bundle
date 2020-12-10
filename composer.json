@@ -11,9 +11,9 @@
 	"license" : "MIT",
 	"require" : {
 		"php" : "^7.1",
-		"symfony/framework-bundle" : "^4|^5",
-		"friendsofsymfony/elastica-bundle" : "^5",
-		"symfony/messenger" : "^4|^5"
+		"symfony/framework-bundle" : "^5",
+		"friendsofsymfony/elastica-bundle" : "^6@dev",
+		"symfony/messenger" : "^5"
 	},
 	"autoload" : {
 		"psr-4" : {
@@ -22,7 +22,7 @@
 	},
 	"minimum-stability" : "stable",
 	"require-dev" : {
-		"doctrine/doctrine-bundle" : "^1.6",
+		"doctrine/doctrine-bundle" : "~2",
 		"doctrine/orm" : "^2.5"
 	}
 }
