@@ -55,9 +55,8 @@ class ElasticaMessengerExtension extends Extension
 
             foreach ($config['doctrine']['queue_listeners'] as $listenerConfig) {
                 $listenerId = sprintf(
-                    'elastica_messenger.doctrine_queue_listener.%s.%s',
-                    $listenerConfig['index_name'],
-                    $listenerConfig['type_name']
+                    'elastica_messenger.doctrine_queue_listener.%s',
+                    $listenerConfig['index_name']
                 );
 
                 $container->register($listenerId, SyncIndexWithObjectChangeListener::class)

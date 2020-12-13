@@ -1,7 +1,6 @@
 <?php
 namespace BSperduto\ElasticaMessengerBundle\Persister;
 
-use FOS\ElasticaBundle\Persister\Event\Events;
 use FOS\ElasticaBundle\Persister\Event\PostPersistEvent;
 use FOS\ElasticaBundle\Persister\Event\PrePersistEvent;
 use FOS\ElasticaBundle\Persister\PagerPersisterInterface;
