@@ -44,9 +44,6 @@ final class SyncIndexWithObjectChangeProcessor implements MessageHandlerInterfac
         if (false == isset($data['index_name'])) {
             throw new \LogicException('The message data misses index_name');
         }
-        if (false == isset($data['type_name'])) {
-            throw new \LogicException('The message data misses type_name');
-        }
         if (false == isset($data['repository_method'])) {
             throw new \LogicException('The message data misses repository_method');
         }
