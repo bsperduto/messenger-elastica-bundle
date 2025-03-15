@@ -10,10 +10,10 @@
 	],
 	"license" : "MIT",
 	"require" : {
-		"php" : "^7.1",
-		"symfony/framework-bundle" : "^5",
-		"friendsofsymfony/elastica-bundle" : "^6@dev",
-		"symfony/messenger" : "^5"
+		"php" : "^7.1|~8",
+		"symfony/framework-bundle" : "^5|^6",
+		"friendsofsymfony/elastica-bundle" : "^6",
+		"symfony/messenger" : "^5|^6"
 	},
 	"autoload" : {
 		"psr-4" : {
