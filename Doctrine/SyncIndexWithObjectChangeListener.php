@@ -3,6 +3,7 @@ namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 use BSperduto\ElasticaMessengerBundle\Doctrine\SyncIndexWithObjectChangeProcessor as SyncProcessor;
 use Doctrine\Common\EventSubscriber;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
@@ -37,7 +38,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         $this->config = $config;
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postUpdate(PostUpdateEventArgs $args)
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
