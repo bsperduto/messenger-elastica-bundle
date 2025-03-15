@@ -5,6 +5,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use BSperduto\ElasticaMessengerBundle\Doctrine\SyncIndexWithObjectChangeProcessor as SyncProcessor;
 use Doctrine\Common\EventSubscriber;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
@@ -49,7 +50,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
