@@ -4,6 +4,7 @@ namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use BSperduto\ElasticaMessengerBundle\Doctrine\SyncIndexWithObjectChangeProcessor as SyncProcessor;
 use Doctrine\Common\EventSubscriber;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
@@ -58,7 +59,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(PreRemoveEventArgs $args)
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
