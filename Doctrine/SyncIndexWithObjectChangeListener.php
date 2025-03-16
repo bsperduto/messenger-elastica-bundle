@@ -116,7 +116,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
      */
     private function extractId($object)
     {
-        $rp = (new \ReflectionClass($this->modelClass))->getProperty($this->config['model_id']);
+        $rp = (new \ReflectionClass($this->modelClass))->getProperty($this->config['identifier']);
         $rp->setAccessible(true);
         $id = $rp->getValue($object);
         $rp->setAccessible(false);
