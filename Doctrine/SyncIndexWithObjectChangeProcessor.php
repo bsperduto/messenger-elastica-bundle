@@ -4,10 +4,12 @@ namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 use FOS\ElasticaBundle\Persister\PersisterRegistry;
 use FOS\ElasticaBundle\Provider\IndexableInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
 
-final class SyncIndexWithObjectChangeProcessor implements MessageHandlerInterface
+#[AsMessageHandler]
+final class SyncIndexWithObjectChangeProcessor
 {
     const INSERT_ACTION = 'insert';
 
