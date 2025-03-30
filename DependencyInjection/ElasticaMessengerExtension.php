@@ -64,7 +64,10 @@ class ElasticaMessengerExtension extends Extension
                     ->addArgument(new Reference('elastica_messenger.bus'))
                     ->addArgument($listenerConfig['model_class'])
                     ->addArgument($listenerConfig)
-                    ->addTag($this->getEventSubscriber($doctrineDriver), ['connection' => $listenerConfig['connection']])
+                    ->addTag($this->getEventSubscriber($doctrineDriver), ['connection' => $listenerConfig['connection'], 'event' => 'postPersist'])
+                    ->addTag($this->getEventSubscriber($doctrineDriver), ['connection' => $listenerConfig['connection'], 'event' => 'postUpdate'])
+                    ->addTag($this->getEventSubscriber($doctrineDriver), ['connection' => $listenerConfig['connection'], 'event' => 'preRemove'])
+                    ->addTag($this->getEventSubscriber($doctrineDriver), ['connection' => $listenerConfig['connection'], 'event' => 'postFlush'])
                 ;
             }
         }
@@ -87,10 +90,9 @@ class ElasticaMessengerExtension extends Extension
         switch ($driver) {
             case 'mongodb':
                 return 'doctrine_mongodb.odm.event_subscriber';
-                break;
             case 'orm':
             default:
-                return 'doctrine.event_subscriber';
+                return 'doctrine.event_listener';
         }
     }
 }

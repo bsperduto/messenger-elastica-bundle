@@ -11,10 +11,7 @@ use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
 use Doctrine\ORM\Events;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[AsDoctrineListener(event: Events::postPersist, priority: 100)]
-#[AsDoctrineListener(event: Events::postUpdate, priority: 100)]
-#[AsDoctrineListener(event: Events::preRemove, priority: 100)]
-#[AsDoctrineListener(event: Events::postFlush, priority: 100)]
+
 final class SyncIndexWithObjectChangeListener
 {
     /**
