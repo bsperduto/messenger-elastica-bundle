@@ -1,17 +1,21 @@
 <?php
 namespace BSperduto\ElasticaMessengerBundle\Doctrine;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use BSperduto\ElasticaMessengerBundle\Doctrine\SyncIndexWithObjectChangeProcessor as SyncProcessor;
-use Doctrine\Common\EventSubscriber;
 use BSperduto\ElasticaMessengerBundle\Messages\DoctrineChangeNotification;
+use Doctrine\ORM\Events;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class SyncIndexWithObjectChangeListener implements EventSubscriber
+#[AsDoctrineListener(event: Events::postPersist, priority: 100)]
+#[AsDoctrineListener(event: Events::postUpdate, priority: 100)]
+#[AsDoctrineListener(event: Events::preRemove, priority: 100)]
+#[AsDoctrineListener(event: Events::postFlush, priority: 100)]
+final class SyncIndexWithObjectChangeListener
 {
     /**
      * @var MessageBusInterface
@@ -40,7 +44,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         $this->config = $config;
     }
 
-    public function postUpdate(PostUpdateEventArgs $args)
+    public function postUpdate(PostUpdateEventArgs $args): void
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
@@ -50,7 +54,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function postPersist(PostPersistEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args): void
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
@@ -60,7 +64,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function preRemove(PreRemoveEventArgs $args)
+    public function preRemove(PreRemoveEventArgs $args): void
     {
         if ($args->getObject() instanceof $this->modelClass) {
             $this->scheduledForUpdateIndex[] = [
@@ -70,7 +74,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function postFlush(PostFlushEventArgs $event)
+    public function postFlush(PostFlushEventArgs $event): void
     {
         if (count($this->scheduledForUpdateIndex)) {
             foreach ($this->scheduledForUpdateIndex as $updateIndex) {
@@ -81,21 +85,11 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
         }
     }
 
-    public function getSubscribedEvents()
-    {
-        return [
-            'postPersist',
-            'postUpdate',
-            'preRemove',
-            'postFlush'
-        ];
-    }
-
     /**
      * @param string $action
      * @param $id
      */
-    private function sendUpdateIndexMessage($action, $id)
+    private function sendUpdateIndexMessage($action, $id): void
     {
         $message = new DoctrineChangeNotification([
             'action' => $action,
@@ -114,7 +108,7 @@ final class SyncIndexWithObjectChangeListener implements EventSubscriber
      * @return mixed
      * @throws \ReflectionException
      */
-    private function extractId($object)
+    private function extractId($object): mixed
     {
         $rp = (new \ReflectionClass($this->modelClass))->getProperty($this->config['model_id']);
         $rp->setAccessible(true);

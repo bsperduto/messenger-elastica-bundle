@@ -5,10 +5,12 @@ use FOS\ElasticaBundle\Persister\InPlacePagerPersister;
 use FOS\ElasticaBundle\Persister\PagerPersisterRegistry;
 use FOS\ElasticaBundle\Provider\PagerProviderRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use BSperduto\ElasticaMessengerBundle\Messages\MessengerPersisterNotification;
 
-final class MessengerProcessor implements MessageHandlerInterface
+#[AsMessageHandler]
+final class MessengerProcessor
 {
     private $pagerProviderRegistry;
 
