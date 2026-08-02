@@ -11,9 +11,9 @@
 	"license" : "MIT",
 	"require" : {
 		"php" : "~8",
-		"symfony/framework-bundle" : "^6",
-		"friendsofsymfony/elastica-bundle" : "^6",
-		"symfony/messenger" : "^6"
+		"symfony/framework-bundle" : "^6|^7",
+		"friendsofsymfony/elastica-bundle" : "^6|^7",
+		"symfony/messenger" : "^6|^7"
 	},
 	"autoload" : {
 		"psr-4" : {
