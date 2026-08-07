@@ -41,7 +41,7 @@ final class MessengerPagerPersister implements PagerPersisterInterface
     /**
      * {@inheritdoc}
      */
-    public function insert(PagerInterface $pager, array $options = array())
+    public function insert(PagerInterface $pager, array $options = array()): void
     {
         $pager->setMaxPerPage(empty($options['max_per_page']) ? 100 : $options['max_per_page']);
 
